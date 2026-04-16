@@ -250,19 +250,36 @@ class MainWindow:
         if event.keyval == Gdk.KEY_Escape and self.is_fullscreen:
             self.toggle_fullscreen()
             
-        # Handle day navigation shortcuts even if they are hidden due to resize.
-        if event.state & Gdk.ModifierType.CONTROL_MASK:
-            if event.keyval == Gdk.KEY_Page_Up:
-                self.on_back_one_day_button_clicked(None)
-                return True
-            elif event.keyval == Gdk.KEY_Page_Down:
-                self.on_forward_one_day_button_clicked(None)
-                return True
+        # Global keyboard shortcuts that work even if buttons are hidden.
+        # This maps key combinations to callback methods. 
+        shortcuts = {
+            # Navigation shortcuts
+            (Gdk.ModifierType.CONTROL_MASK, Gdk.KEY_Page_Up): self.on_back_one_day_button_clicked,
+            (Gdk.ModifierType.CONTROL_MASK, Gdk.KEY_Page_Down): self.on_forward_one_day_button_clicked,
+            (Gdk.ModifierType.MOD1_MASK, Gdk.KEY_Home): self.on_today_button_clicked,
 
-        if event.state & Gdk.ModifierType.MOD1_MASK: # Alt key
-            if event.keyval == Gdk.KEY_Home:
-                self.on_today_button_clicked(None)
-                return True
+            # Preview/Edit shortcuts
+            (Gdk.ModifierType.CONTROL_MASK, Gdk.KEY_p): self.on_preview_or_edit_toggle,
+
+            # Find shortcut
+            (Gdk.Modifier.CONTROL_MASK, Gdk.KEY_F): self.on_find_activated,
+        }
+
+    # Check if the current key combination matches any shortcut.
+    for (modifier, keyval), callback in shortcuts.items():
+        if (event.state & modifier) == modifier and event.keyval == keyval:
+            callback(None)
+            return True 
+    return False
+
+def on_preview_or_edit_toggle(self, widget):
+    """Toggle between preview and edit mode (Ctrl+P)"""
+    self.change_mode(preview=not self.preview_mode)
+
+def on_find_activated(self, widget):
+    """Activate find/search (Ctrl+F)"""
+    self.search_box.entry.grab_focus()
+            
         
 
     # TRAY-ICON / CLOSE --------------------------------------------------------

@@ -249,6 +249,21 @@ class MainWindow:
         # Exit fullscreen mode with ESC.
         if event.keyval == Gdk.KEY_Escape and self.is_fullscreen:
             self.toggle_fullscreen()
+            
+        # Handle day navigation shortcuts even if they are hidden due to resize.
+        if event.state & Gdk.ModifierType.CONTROL_MASK:
+            if event.keyval == Gdk.KEY_Page_Up:
+                self.on_back_one_day_button_clicked(None)
+                return True
+            elif event.keyval == Gdk.KEY_Page_Down:
+                self.on_forward_one_day_button_clicked(None)
+                return True
+
+        if event.state & Gdk.ModifierType.MOD1_MASK: # Alt key
+            if event.keyval == Gdk.KEY_Home:
+                self.on_today_button_clicked(None)
+                return True
+        
 
     # TRAY-ICON / CLOSE --------------------------------------------------------
 

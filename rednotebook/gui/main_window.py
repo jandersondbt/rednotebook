@@ -265,12 +265,12 @@ class MainWindow:
             (Gdk.Modifier.CONTROL_MASK, Gdk.KEY_F): self.on_find_activated,
         }
 
-    # Check if the current key combination matches any shortcut.
-    for (modifier, keyval), callback in shortcuts.items():
-        if (event.state & modifier) == modifier and event.keyval == keyval:
-            callback(None)
-            return True 
-    return False
+        # Check if the current key combination matches any shortcut.
+        for (modifier, keyval), callback in shortcuts.items():
+            if (event.state & modifier) == modifier and event.keyval == keyval:
+                callback(None)
+                return True 
+        return False
 
 def on_preview_or_edit_toggle(self, widget):
     """Toggle between preview and edit mode (Ctrl+P)"""

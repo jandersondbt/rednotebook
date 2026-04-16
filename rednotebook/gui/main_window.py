@@ -265,7 +265,7 @@ class MainWindow:
         for (modifier, keyval), callback in shortcuts.items():
             if (event.state & modifier) == modifier and event.keyval == keyval:
                 callback(None)
-                return True 
+                return True
         return False
 
     def on_preview_or_edit_toggle(self, widget):
